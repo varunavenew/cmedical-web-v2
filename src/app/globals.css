@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* @font-face {
+    font-family: "ABC Ginto";
+    src: url("../fonts/ABCGintoNormalVariable.woff2") format("woff2-variations");
+    font-weight: 255 265 300 400 600;
+    font-style: oblique 0deg 20deg;
+    font-display: swap;
+  } */
+
+  html {
+    @apply text-small bg-skin1 antialiased;
+  }
+
+  .prose strong {
+    font-weight: 500;
+  }
+
+  address {
+    font-style: inherit;
+  }
+
+  details > summary {
+    list-style: none;
+  }
+
+  details > summary::marker, /* Latest Chrome, Edge, Firefox */ 
+  details > summary::-webkit-details-marker /* Safari */ {
+    display: none;
+  }
+
+  /* #app {
+    view-transition-name: app-transition;
+  }
+  #site-header {
+    view-transition-name: menu-transition;
+  }
+
+  ::view-transition-old(app-transition) {
+    animation: none;
+  }
+  ::view-transition-new(app-transition) {
+    animation-name: app-anim;
+    animation-duration: 700ms;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(menu-transition) {
+    animation: none;
+    position: fixed;
+  }
+  ::view-transition-new(menu-transition) {
+    animation: none;
+  }
+
+  @keyframes app-anim {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: none;
+    }
+  } */
+}
+
+@layer components {
+  .pill {
+    @apply rounded-15 border-half border-black/10 px-15 flex items-center h-40 transition-all duration-slow ease-in-out;
+  }
+
+  progress {
+    @apply h-9 border border-transparent bg-black/5 rounded-10 overflow-hidden text-black;
+
+    &::-webkit-progress-bar {
+      @apply bg-transparent;
+    }
+
+    &::-webkit-progress-value {
+      @apply bg-black;
+    }
+    &::-moz-progress-bar {
+      @apply bg-black;
+    }
+  }
+}
