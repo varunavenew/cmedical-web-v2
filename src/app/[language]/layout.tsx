@@ -105,7 +105,7 @@ export default async function RootLayout({
             <SiteFooter language={params.language} />
           </div>
         </div>
-        <ExtendedFooter language={params.language} />
+        {/* <ExtendedFooter language={params.language} /> */}
       </body>
     </html>
   );

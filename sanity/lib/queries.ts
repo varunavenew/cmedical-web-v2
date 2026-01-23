@@ -553,6 +553,11 @@ export const globalSettingsQuery = groq`*[_id == "globalSettings"][0] {
         "slug": slug[_key == $language][0].value.current,
         "about": about[_key == $language][0].value,
         hideFromMainMenu,
+        "treatments": *[_type == "treatmentPage" && ^._id in categories[]._ref && language == $language] | order(coalesce(sortOrder, 10) asc, title asc) {
+            _id,
+            title,
+            "slug": slug.current,
+        }
     },
     "otherCategories": *[_type == "categoryPage" && !(_id in ^.menuCategories[_key == $language].value[]._ref) && defined(slug[_key == $language][0].value)] {
         _id,
@@ -560,6 +565,11 @@ export const globalSettingsQuery = groq`*[_id == "globalSettings"][0] {
         "title": title[_key == $language][0].value, 
         "slug": slug[_key == $language][0].value.current,
         hideFromMainMenu,
+        "treatments": *[_type == "treatmentPage" && ^._id in categories[]._ref && language == $language] | order(coalesce(sortOrder, 10) asc, title asc) {
+            _id,
+            title,
+            "slug": slug.current,
+        }
     },
     "clinics": *[_id == "clinicListPage"][0] {
         "menuTitle": menuTitle[_key == $language][0].value, 
@@ -695,13 +705,13 @@ export const bookingClinicsQuery = groq`*[_type == "clinicPage" && defined(descr
     }[0],
 }`;
 export type BookingClinicsQueryResult = Array<{
-  title: string;
-  booking: ClinicPage["booking"];
-  contactInfo: ClinicPage["contactInfo"];
-  category?: {
-    title?: string | null;
-    metodikaActivityGroupTitle?: string | null;
-  } | null;
+    title: string;
+    booking: ClinicPage["booking"];
+    contactInfo: ClinicPage["contactInfo"];
+    category?: {
+        title?: string | null;
+        metodikaActivityGroupTitle?: string | null;
+    } | null;
 }>;
 
 export const articlePageQuery = groq`*[_type == "articlePage" && _id == $id && language == $language][0] {
@@ -830,12 +840,12 @@ export const bookingSpecialistDataQuery = groq`*[_type == "specialistPage" && sl
     },
 }`;
 export type BookingSpecialistDataQueryResult = {
-  title: string;
-  booking: ClinicPage["booking"] & {
-    pasientSkyCalendarId?: string;
-    metodikaSpecialistId?: number;
-  };
-  contactInfo: ClinicPage["contactInfo"];
+    title: string;
+    booking: ClinicPage["booking"] & {
+        pasientSkyCalendarId?: string;
+        metodikaSpecialistId?: number;
+    };
+    contactInfo: ClinicPage["contactInfo"];
 };
 
 export const bookingClinicDataQuery = groq`*[_type == "clinicPage" && slug.current == $clinicSlug][0] {
@@ -858,9 +868,9 @@ export const bookingClinicDataQuery = groq`*[_type == "clinicPage" && slug.curre
     },
 }`;
 export type BookingClinicDataQueryResult = {
-  title: string;
-  booking: ClinicPage["booking"];
-  contactInfo: ClinicPage["contactInfo"];
+    title: string;
+    booking: ClinicPage["booking"];
+    contactInfo: ClinicPage["contactInfo"];
 };
 
 export const redirectsQuery = groq`*[_type == "redirect"] {
@@ -871,9 +881,9 @@ export const redirectsQuery = groq`*[_type == "redirect"] {
   permanent
   }`;
 export type RedirectsDataQueryResult = Array<{
-  source?: string | null;
-  type?: "slug" | "url" | null;
-  destinationSlug?: string | null;
-  destinationUrl?: string | null;
-  permanent?: boolean | null;
+    source?: string | null;
+    type?: "slug" | "url" | null;
+    destinationSlug?: string | null;
+    destinationUrl?: string | null;
+    permanent?: boolean | null;
 }>;

@@ -18,7 +18,9 @@ interface HomePage {
   title: string;
   language: string;
   primaryImage: ImageWithAlt;
+  primaryVideo?: VideoObject;
   secondaryImage: ImageWithAlt;
+  secondaryVideo?: VideoObject;
   payoff: string;
   aboutTitle: string;
   aboutBody: import("sanity").PortableTextBlock[];
@@ -26,6 +28,7 @@ interface HomePage {
   promotedCategories?: import("@sanity/client").SanityDocument<
     Pick<CategoryPage, "primaryImage" | "title" | "slug" | "language">
   >[];
+  home?: HomeDocument;
   finance: SubTopicsWithIntro;
   faq: SubTopicsWithIntro;
   clinicList: import("@sanity/client").SanityDocument<
@@ -42,6 +45,30 @@ interface HomePage {
   specialistList: import("@sanity/client").SanityDocument<
     Pick<SpecialistListPage, "menuTitle" | "slug">
   >;
+}
+
+interface HomeDocument {
+  heroSections?: HeroVideoCard[];
+  servicesSection?: {
+    services?: ServiceCard[];
+  };
+}
+
+interface HeroVideoCard {
+  eyebrow?: string;
+  headline: string;
+  description?: string;
+  backgroundVideoUrl?: string;
+  cta?: {
+    label?: string;
+    url?: string;
+  };
+}
+
+interface ServiceCard {
+  title: string;
+  link?: string;
+  image: SanityImage;
 }
 
 interface CategoryPage {
@@ -280,10 +307,22 @@ interface GlobalSettings {
     Pick<
       CategoryPage,
       "title" | "slug" | "language" | "about" | "hideFromMainMenu"
-    >
+    > & {
+      treatments?: Array<{
+        _id: string;
+        title: string;
+        slug: string;
+      }>;
+    }
   >[];
   otherCategories: import("@sanity/client").SanityDocument<
-    Pick<CategoryPage, "title" | "slug" | "language" | "hideFromMainMenu">
+    Pick<CategoryPage, "title" | "slug" | "language" | "hideFromMainMenu"> & {
+      treatments?: Array<{
+        _id: string;
+        title: string;
+        slug: string;
+      }>;
+    }
   >[];
   clinics: Pick<ClinicListPage, "menuTitle" | "slug">;
   specialists: Pick<SpecialistListPage, "menuTitle" | "slug">;
@@ -326,6 +365,23 @@ interface SeoQueryData {
 
 interface ImageWithAlt {
   image: SanityImage;
+  alt?: string;
+}
+
+interface VideoObject {
+  videoType: "file" | "youtube";
+  videoFile?: {
+    asset?: {
+      _id?: string;
+      _ref?: string;
+      _type?: string;
+      url?: string;
+      originalFilename?: string;
+      mimeType?: string;
+    };
+  };
+  youtubeUrl?: string;
+  poster?: SanityImage;
   alt?: string;
 }
 
@@ -416,40 +472,40 @@ type BookingCategory = Pick<CategoryPage, "title" | "slug" | "about"> & {
 
 type PathQuery =
   | {
-      _type: "homePage";
-      _updatedAt: string;
-      language: string;
-    }
+    _type: "homePage";
+    _updatedAt: string;
+    language: string;
+  }
   | {
-      _type: "articlePage";
-      _updatedAt: string;
-      language: string;
-      slug: { current: string };
-    }
+    _type: "articlePage";
+    _updatedAt: string;
+    language: string;
+    slug: { current: string };
+  }
   | {
-      _type:
-        | "categoryPage"
-        | "clinicListPage"
-        | "specialistListPage"
-        | "teamPage";
-      _updatedAt: string;
-      language: string;
-      slug: LocalizedSlug[];
-    }
+    _type:
+    | "categoryPage"
+    | "clinicListPage"
+    | "specialistListPage"
+    | "teamPage";
+    _updatedAt: string;
+    language: string;
+    slug: LocalizedSlug[];
+  }
   | {
-      _type: "treatmentPage";
-      _updatedAt: string;
-      language: string;
-      slug: string;
-      parents: string[];
-    }
+    _type: "treatmentPage";
+    _updatedAt: string;
+    language: string;
+    slug: string;
+    parents: string[];
+  }
   | {
-      _type: "clinicPage" | "specialistPage";
-      _updatedAt: string;
-      slug: string;
-      parent: LocalizedSlug[];
-      languages: string[];
-    };
+    _type: "clinicPage" | "specialistPage";
+    _updatedAt: string;
+    slug: string;
+    parent: LocalizedSlug[];
+    languages: string[];
+  };
 interface LocalizedSlug {
   _key: string;
   value: { current: string };

@@ -1,5 +1,8 @@
 import { Template, type SchemaTypeDefinition } from "sanity";
 import { homePage } from "./homePage";
+import { home } from "./home";
+import { heroVideoCard } from "./heroVideoCard";
+import { serviceCard } from "./serviceCard";
 import { categoryPage } from "./categoryPage";
 import { finance } from "./finance";
 import { subTopic } from "./subTopic";
@@ -34,7 +37,10 @@ export const schema: {
   templates: (prev: Template<any, any>[]) => Template<any, any>[];
 } = {
   types: [
+    home,
+    heroVideoCard,
     homePage,
+    serviceCard,
     categoryPage,
     finance,
     faq,

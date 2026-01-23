@@ -1,8 +1,9 @@
+"use client";
 import { FC } from "react";
 import type { SanityDocument } from "@sanity/client";
 import Link from "next/link";
 import { Image } from "../Image";
-import { Pill } from "../Pill";
+import { motion } from "framer-motion";
 
 interface Props {
   categories: SanityDocument<
@@ -12,29 +13,42 @@ interface Props {
 
 export const CategoryList: FC<Props> = ({ categories }) => {
   return (
-    <div className="grid md:flex md:justify-center w-full">
-      {categories.map((cat) => (
-        <Link
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, delay: 1.2 }}
+      className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 max-w-5xl mx-auto"
+    >
+      {categories.map((cat, index) => (
+        <motion.div
           key={cat._id}
-          href={`/${cat.language}/${cat.slug}`}
-          className="md:w-1/3 aspect-square w-full h-full bg-black group overflow-hidden relative"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 1.3 + index * 0.08 }}
         >
-          <Image
-            image={cat.primaryImage.image}
-            alt={cat.primaryImage.alt}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-slow"
-            sizes="(min-width: 768px) 33vw, 100vw"
-          />
-          <div className="absolute top-0 w-full h-full flex justify-center items-center z-10">
-            <Pill
-              bg="bg-white"
-              bgHover="group-hover:bg-opacity-80"
-              text={cat.title}
-              span="&rsaquo;"
+          <Link
+            href={`/${cat.language}/${cat.slug}`}
+            className="group relative overflow-hidden rounded-xl aspect-[3/4] block"
+          >
+            <Image
+              image={cat.primaryImage.image}
+              alt={cat.primaryImage.alt}
+              className="w-full h-full"
+              imageClassName="object-cover transition-transform duration-500 group-hover:scale-105"
+              sizes="(min-width: 768px) 20vw, 50vw"
             />
-          </div>
-        </Link>
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+            {/* Title at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
+              <h3 className="text-white text-sm md:text-base font-light">
+                {cat.title}
+              </h3>
+            </div>
+          </Link>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };
