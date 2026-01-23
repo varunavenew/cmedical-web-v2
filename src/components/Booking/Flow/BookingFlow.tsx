@@ -188,7 +188,7 @@ export const BookingFlow: FC<Props> = ({
               <ClinicStep
                 language={language}
                 clinicLanguage={clinicLanguage}
-                categorySlug={categorySlug}
+                treatmentSlug={categorySlug}
                 selectedService={selectedService}
                 onSelect={(clinic) => {
                   setBookingData(clinic);

@@ -37,11 +37,12 @@ export const ClinicStep: FC<Props> = ({
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const url = new URL("/api/booking/clinics", location.origin);
+    const url = new URL("/api/booking/clinics-for-service", location.origin);
     url.searchParams.set("language", language);
     url.searchParams.set("clinicLanguage", clinicLanguage);
-    url.searchParams.set("categorySlug", categorySlug);
+    url.searchParams.set("treatmentSlug", selectedService?.slug);
 
+    console.log('url', url);
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
@@ -148,9 +149,9 @@ export const ClinicStep: FC<Props> = ({
                       {clinic.title}
                       <ExternalLink className="w-4 h-4 text-muted-foreground" />
                     </p>
-                    {clinic.contactInfo.address && (
+                    {clinic.address && (
                       <p className="text-sm text-muted-foreground">
-                        {clinic.contactInfo.address}
+                        {clinic.address}
                       </p>
                     )}
                   </div>
@@ -177,7 +178,7 @@ export const ClinicStep: FC<Props> = ({
                 </div>
                 <div className="flex-1">
                   <p className="font-normal text-foreground">{clinic.title}</p>
-                  {clinic.contactInfo.address && (
+                  {clinic.address && (
                     <p className="text-sm text-muted-foreground">
                       {clinic.address}
                     </p>

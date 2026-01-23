@@ -16,14 +16,19 @@ export const BookingStep: FC<PropsWithChildren<Props>> = ({
   error,
   children,
 }) => (
-  <div className={classNames("flex-grow w-full flex flex-col", className)}>
-    <div className="w-full max-w-450 mx-auto">
+  <div
+    className={classNames(
+      "flex-grow w-full flex flex-col items-stretch",
+      className
+    )}
+  >
+    <div className="w-full max-w-2xl mx-auto mt-8 md:mt-10 px-4">
       {title && (
-        <h2 className="text-medium mx-40 mt-40 md:mt-60 text-center">
+        <h2 className="text-2xl md:text-3xl font-light text-foreground text-center mb-6">
           {title}
         </h2>
       )}
+      {error ? <Error language={language} /> : children}
     </div>
-    {error ? <Error language={language} /> : children}
   </div>
 );
