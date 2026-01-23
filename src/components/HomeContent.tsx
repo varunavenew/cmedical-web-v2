@@ -1,5 +1,5 @@
 "use client"
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { CategoryList } from "./Category/CategoryList";
 import { SubTopicsSection } from "./SubTopicsSection";
 import { ClinicsAndSpecialistsSection } from "./ClinicsAndSpecialistsSection";
@@ -20,6 +20,11 @@ interface Props {
 const HomeContent: FC<Props> = ({ data }) => {
   const heroCards = data.home?.heroSections?.slice(0, 2) ?? [];
   const services = data.home?.servicesSection?.services ?? [];
+  useEffect(() => {
+    console.log('Home data:', data.home);
+    console.log('Hero cards:', heroCards);
+    console.log('Services:', services);
+  }, [data.home, heroCards, services]);
 
   return (
     <main>

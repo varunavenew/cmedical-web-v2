@@ -121,9 +121,37 @@ export const homePageQuery = groq`*[_type=="homePage" && _id == $id][0]{
     },
     "specialistList": *[_id == "specialistListPage"][0] {
         _id,
-        "menuTitle": menuTitle[_key == $language][0].value,
+        "menuTitle": menuTitle[_key == $language][0].value, 
         "slug": slug[_key == $language][0].value.current,
     },
+    "home": *[_type == "home"][0]{
+        heroSections[]{
+            eyebrow,
+            headline,
+            description,
+            cta{
+                label,
+                url
+            },
+            "backgroundVideoUrl": backgroundVideo.asset->url
+        },
+        servicesSection{
+            services[]{
+                title,
+                link,
+                image{
+                    hotspot,
+                    crop,
+                    asset->{
+                        _id,
+                        _type,
+                        url,
+                        metadata
+                    }
+                }
+            }
+        }
+    }
 }`;
 
 export const categoryPagePathsQuery = groq`*[_type=='categoryPage'] {  "category": slug }`;
@@ -887,3 +915,44 @@ export type RedirectsDataQueryResult = Array<{
     destinationUrl?: string | null;
     permanent?: boolean | null;
 }>;
+
+// Booking queries for new booking flow
+export const bookingServicesByCategoryQuery = groq`*[_type == "categoryPage" && defined(title[_key == $language][0].value) && defined(slug[_key == $language][0].value.current)] | order(title[_key == $language][0].value asc) {
+  "id": slug[_key == $language][0].value.current,
+  "label": title[_key == $language][0].value,
+  "services": *[_type == "treatmentPage" && language == $language && ^._id in categories[]._ref] | order(coalesce(sortOrder, 10) asc, title asc) {
+    "name": title,
+    "slug": slug.current,
+    "price": "",
+    "duration": ""
+  }
+}`;
+
+export const bookingClinicsForServiceQuery = groq`*[_type == "clinicPage" && defined(description[_key == $clinicLanguage][0].value) && $treatmentSlug in treatments[]->slug.current] {
+  "id": slug[_key == $clinicLanguage][0].value.current,
+  "label": title,
+  "address": contactInfo.streetAddress,
+  "phone": contactInfo.phoneNumber,
+  "email": contactInfo.email,
+  booking {
+    method,
+    serviceProviderId,
+    metodikaCityId,
+    externalBookingUrl,
+    redirectToExternalBookingUrl
+  }
+}`;
+
+export const bookingSpecialistsQuery = groq`*[_type == "specialistPage" && defined(description[_key == $language][0].value)] {
+  _id,
+  "name": name,
+  "slug": slug.current,
+  "title": descriptionHeading[_key == $language][0].value,
+  "image": primaryImage.image.asset->url,
+  "bio": description[_key == $language][0].value[0].children[0].text,
+  "expertise": valueProposition.valueProposition1[_key == $language].value[],
+  "languages": [],
+  "clinics": *[_type == "clinicPage" && ^._id in specialists[]._ref].title,
+  "education": "",
+  "experience": ""
+}`;
