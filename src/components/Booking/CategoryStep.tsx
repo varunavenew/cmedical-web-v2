@@ -16,6 +16,8 @@ interface Service {
 }
 
 interface BookingCategoryWithServices extends BookingCategory {
+  id: string;
+  label: string;
   services?: Service[];
 }
 
@@ -39,9 +41,10 @@ export const CategoryStep: FC<Props> = ({
   const [categories, setCategories] = useState<BookingCategoryWithServices[]>();
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [error, setError] = useState(false);
-
+   
   useEffect(() => {
     setError(false);
+    // const url = new URL("/api/booking/categories", location.origin);
     const url = new URL("/api/booking/services", location.origin);
     url.searchParams.set("language", language);
     url.searchParams.set("clinicLanguage", clinicLanguage);
@@ -85,12 +88,12 @@ export const CategoryStep: FC<Props> = ({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-light text-foreground text-center mb-6">
+      <h2 className="text-2xl font-light text-foreground text-center mb-15">
         {t(CHOOSE_CATEGORY, language)}
       </h2>
 
       {error && (
-        <div className="p-4 bg-red-50 rounded-lg text-center">
+        <div className="p-15 bg-red-50 rounded-lg text-center">
           <p className="text-red-600">
             Kunne ikke laste tjenester. Vennligst prøv igjen senere.
           </p>
@@ -109,17 +112,17 @@ export const CategoryStep: FC<Props> = ({
             const clinicsForCategory = availableClinics;
 
             return (
-              <div key={category.slug} className="rounded-lg overflow-hidden">
+              <div key={category.id} className="rounded-lg overflow-hidden">
                 {/* Category Header */}
                 <button
                   onClick={() =>
                     setExpandedCategory(
-                      expandedCategory === category.slug ? null : category.slug
+                      expandedCategory === category.id ? null : category.id
                     )
                   }
                   className={cn(
-                    "w-full flex items-center justify-between p-4 bg-white rounded-lg transition-all hover:bg-muted/30",
-                    expandedCategory === category.slug && "rounded-b-none"
+                    "w-full flex items-center justify-between p-15 bg-white rounded-lg transition-all hover:bg-muted/30",
+                    expandedCategory === category.id && "rounded-b-none"
                   )}
                 >
                   <span className="font-normal text-foreground">
@@ -127,10 +130,10 @@ export const CategoryStep: FC<Props> = ({
                   </span>
 
                   {/* Clinic availability badges */}
-                  <div className="flex items-center gap-3 ml-auto mr-4">
+                  <div className="flex items-center gap-3 ml-auto mr-15">
                     <div className="flex items-center gap-1.5">
                       {clinicsForCategory.length > 0 && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-beige text-foreground/70 font-light">
+                        <span className="text-[10px] px-7 py-0.5 rounded-full bg-brand-beige text-foreground/70 font-light">
                           {clinicsForCategory.length === availableClinics.length
                             ? "Alle klinikker"
                             : clinicsForCategory.slice(0, 2).map((c) => c.label).join(", ")}
@@ -140,7 +143,7 @@ export const CategoryStep: FC<Props> = ({
                     <ChevronDown
                       className={cn(
                         "w-5 h-5 text-muted-foreground transition-transform duration-300 flex-shrink-0",
-                        expandedCategory === category.slug && "rotate-180"
+                        expandedCategory === category.id && "rotate-180"
                       )}
                     />
                   </div>
@@ -148,7 +151,7 @@ export const CategoryStep: FC<Props> = ({
 
                 {/* Services List */}
                 <AnimatePresence>
-                  {expandedCategory === category.slug && (
+                  {expandedCategory === category.id && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
@@ -156,32 +159,32 @@ export const CategoryStep: FC<Props> = ({
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden bg-white border-t border-border/10"
                     >
-                      <div className="p-3 space-y-2">
+                      <div className="p-3 space-y-7">
                         {category.services?.map((service, index) => (
                           <button
                             key={index}
                             onClick={() =>
                               handleSelectService(
-                                category.slug,
+                                category.id,
                                 category.label,
                                 service
                               )
                             }
-                            className="w-full flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors text-left group"
+                            className="w-full flex items-center justify-between p-15 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors text-left group"
                           >
-                            <div className="flex-1 pr-4">
+                            <div className="flex-1 pr-15">
                               <span className="text-foreground">
                                 {service.name}{" "}
                                 {service.price !== "0"
                                   ? `fra kr ${service.price},-`
                                   : "kr 0"}
                               </span>
-                              <span className="text-muted-foreground ml-2 text-sm">
+                              <span className="text-muted-foreground ml-7 text-sm">
                                 {service.duration}
                               </span>
                             </div>
                             <div className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center flex-shrink-0">
-                              <ArrowRight className="w-4 h-4 text-background" />
+                              <ArrowRight className="w-15 h-15 text-background" />
                             </div>
                           </button>
                         ))}

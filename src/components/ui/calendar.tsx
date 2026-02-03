@@ -11,23 +11,23 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-4 pointer-events-auto w-full", className)}
+      className={cn("p-15 pointer-events-auto w-full", className)}
       classNames={{
-        months: "flex flex-col sm:flex-row space-y-6 sm:space-x-6 sm:space-y-0 w-full",
+        months: "flex sm:flex-row space-y-6 sm:space-x-6 sm:space-y-0 w-full",
         month: "space-y-6 w-full",
-        caption: "flex justify-center pt-2 relative items-center",
+        caption: "flex justify-center pt-7 relative items-center",
         caption_label: "text-lg font-semibold text-foreground",
-        nav: "space-x-2 flex items-center",
+        nav: "space-x-7 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-10 w-10 bg-transparent p-0 opacity-70 hover:opacity-100 hover:bg-accent transition-all",
+          "h-40 w-40 bg-transparent p-0 opacity-70 hover:opacity-100 hover:bg-accent transition-all",
         ),
-        nav_button_previous: "absolute left-2",
-        nav_button_next: "absolute right-2",
+        nav_button_previous: "absolute left-7",
+        nav_button_next: "absolute right-7",
         table: "w-full border-collapse",
         head_row: "flex w-full justify-between",
-        head_cell: "text-muted-foreground rounded-md flex-1 h-10 font-medium text-sm flex items-center justify-center",
-        row: "flex w-full mt-1 justify-between",
+        head_cell: "text-muted-foreground rounded-md flex-1 h-40 font-medium text-sm flex items-center justify-center",
+        row: "flex w-full mt-4 justify-between",
         cell: "h-12 flex-1 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 flex items-center justify-center",
         day: cn(buttonVariants({ variant: "ghost" }), "h-11 w-11 p-0 font-medium aria-selected:opacity-100 hover:bg-accent/50 transition-colors rounded-lg"),
         day_range_end: "day-range-end",

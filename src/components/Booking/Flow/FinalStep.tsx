@@ -5,60 +5,63 @@ import {
 } from "@/sanity/lib/queries";
 import { FC } from "react";
 import { ContactInfoStep } from "./ContactInfoStep";
-import { IframeStep } from "./IframeStep";
 import { ClosedForBookingStep } from "./ClosedForBookingStep";
+import { CustomBookingFlow } from "./CustomBookingFlow";
+
+interface ServiceData {
+  name: string;
+  slug: string;
+  price?: string;
+  duration?: string;
+}
 
 interface Props {
   language: string;
   clinicLanguage: "no" | "se";
   bookingData:
-    | BookingSpecialistDataQueryResult
-    | BookingClinicDataQueryResult
-    | BookingClinicsQueryResult[number];
+  | BookingSpecialistDataQueryResult
+  | BookingClinicDataQueryResult
+  | BookingClinicsQueryResult[number];
+  selectedService?: ServiceData;
+  customSubStep?: "time" | "confirm" | "success";
+  onCustomSubStepChange?: (subStep: "time" | "confirm" | "success") => void;
 }
 
-// The final step where we either show a booking iframe, information about how to book,
-// or redirect to an external booking site.
+// The final step where we either show a booking iframe, custom booking flow,
+// information about how to book, or redirect to an external booking site.
 export const FinalStep: FC<Props> = ({
   language,
   clinicLanguage,
   bookingData,
+  selectedService,
+  customSubStep = "time",
+  onCustomSubStepChange,
 }) => {
   if (bookingData.booking?.method == null) {
-    return;
+    return null;
   }
 
+  const bookingMethod = bookingData.booking.method as string;
+
+  // Custom booking flow using internal UI (no iframes)
   if (
-    bookingData.booking?.method === "pasientsky" ||
-    bookingData.booking?.method === "metodika"
+    bookingMethod === "pasientsky" ||
+    bookingMethod === "metodika" ||
+    bookingMethod === "custom"
   ) {
     return (
-      <IframeStep
+      <CustomBookingFlow
         language={language}
-        method={bookingData.booking.method}
-        serviceProviderId={bookingData.booking.serviceProviderId}
-        metodikaCityId={bookingData.booking.metodikaCityId}
-        metodikaSpecialistId={
-          "metodikaSpecialistId" in bookingData.booking
-            ? bookingData.booking.metodikaSpecialistId
-            : undefined
-        }
-        metodikaActivityGroupTitle={
-          "category" in bookingData &&
-          bookingData.category?.metodikaActivityGroupTitle
-            ? bookingData.category.metodikaActivityGroupTitle
-            : undefined
-        }
-        pasientskyCalendarId={
-          "pasientSkyCalendarId" in bookingData.booking
-            ? bookingData.booking.pasientSkyCalendarId
-            : undefined
-        }
-        contactInfo={bookingData.contactInfo}
+        clinicLanguage={clinicLanguage}
+        bookingData={bookingData}
+        selectedService={selectedService}
+        currentSubStep={customSubStep || "time"}
+        onSubStepChange={onCustomSubStepChange}
       />
     );
   }
 
+  // Existing: Contact info method
   if (bookingData.booking?.method === "info") {
     return (
       <ContactInfoStep
@@ -70,6 +73,7 @@ export const FinalStep: FC<Props> = ({
     );
   }
 
+  // Existing: Closed for booking
   if (bookingData.booking?.method === "closed") {
     return (
       <ClosedForBookingStep
